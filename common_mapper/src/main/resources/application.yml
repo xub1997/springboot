@@ -1,0 +1,19 @@
+pagehelper:
+  offsetAsPageNum: true
+  rowBoundsWithCount: true
+  dialect: mysql
+  pageSizeZero: true
+  reasonable: true
+  supportMethodsArguments: true
+
+#mybatis
+mybatis:
+  #映射文件位置
+  mapper-locations: classpath:mapper/*.xml
+  #实体类包位置
+  type-aliases-package: com.xub.common_mapper.entity
+mapper:
+  mappers: com.xub.common_mapper.common.IBaseMapper
+  not-empty: false
+  identity: MYSQL
+
