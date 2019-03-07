@@ -15,11 +15,12 @@
 *.iws
 *.iml
 *.ipr
-
+*.class
+*.log
 ### NetBeans ###
 /nbproject/private/
+/build/
 /nbbuild/
 /dist/
 /nbdist/
 /.nb-gradle/
-/build/
