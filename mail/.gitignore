@@ -17,6 +17,8 @@
 *.ipr
 *.class
 *.log
+mvnw
+mvnw.cmd
 ### NetBeans ###
 /nbproject/private/
 /build/
