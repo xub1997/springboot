@@ -1,0 +1,50 @@
+#打印SQL语句
+logging:
+  level:
+    com.xub.wechat.mapper : debug  #mapper对应包名
+server:
+  tomcat:
+    uri-encoding: UTF-8
+  port: 8080
+
+# ===================================================================
+# 分布式文件系统FDFS配置
+# ===================================================================
+fdfs:
+  so-timeout: 1501
+  connect-timeout: 601
+  thumb-image:             #缩略图生成参数
+    width: 80
+    height: 80
+  tracker-list:            #TrackerList参数,支持多个
+    - 39.108.181.16:22122
+    #- 192.168.1.105:22122
+    #- 192.168.1.106:22122
+# ===================================================================
+# 上传临时目录
+# ===================================================================
+temp:
+  basePath: /upload/
+  avatarFileName: userAvatar64.png
+  qrcodeFileName: qrcode.png
+  qrcodePrefix: wechat_qrcode
+  defaultAvatar: /img/icon.png
+
+
+# ===================================================================
+# mybatis
+# ===================================================================
+mybatis:
+  type-aliases-package: com.xub.wechat.pojo
+  mapper-locations: classpath:mapper/*.xml
+
+mapper:
+  mappers: com.xub.wechat.utils.MyMapper
+  not-empty: false
+  identity: MYSQL
+
+# ===================================================================
+# netty
+# ===================================================================
+netty:
+  port: 11111

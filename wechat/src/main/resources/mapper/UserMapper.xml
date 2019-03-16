@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xub.wechat.mapper.UserMapper">
+  <resultMap id="BaseResultMap" type="com.xub.wechat.pojo.User">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="userid" jdbcType="VARCHAR" property="userid" />
+    <result column="username" jdbcType="VARCHAR" property="username" />
+    <result column="nickname" jdbcType="VARCHAR" property="nickname" />
+    <result column="salt" jdbcType="VARCHAR" property="salt" />
+    <result column="pwd" jdbcType="VARCHAR" property="pwd" />
+    <result column="status" jdbcType="INTEGER" property="status" />
+    <result column="qrcode" jdbcType="VARCHAR" property="qrcode" />
+    <result column="avatar_url" jdbcType="VARCHAR" property="avatarUrl" />
+    <result column="avatar_url_big" jdbcType="VARCHAR" property="avatarUrlBig" />
+    <result column="cid" jdbcType="VARCHAR" property="cid" />
+    <result column="country" jdbcType="VARCHAR" property="country" />
+    <result column="region" jdbcType="VARCHAR" property="region" />
+    <result column="city" jdbcType="VARCHAR" property="city" />
+    <result column="is_del" jdbcType="INTEGER" property="isDel" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+  </resultMap>
+
+  <sql id="Base_Column_List">
+    userid, username, nickname, salt, pwd, status, qrcode, avatar_url, avatar_url_big, cid, country, region, city, is_del, create_time,
+    update_time
+  </sql>
+  <select id="search" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from tb_user
+    WHERE is_del=0
+      <if test="username != null and username !=''" >
+        AND LOCATE(#{username}, username)>0
+      </if>
+  </select>
+  <select id="queryUserInfoByUsername" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from tb_user
+    WHERE is_del=0 AND username=#{username} LIMIT 1
+  </select>
+
+</mapper>

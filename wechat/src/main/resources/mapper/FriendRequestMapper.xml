@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xub.wechat.mapper.FriendRequestMapper">
+  <resultMap id="BaseResultMap" type="com.xub.wechat.pojo.FriendRequest">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="request_id" jdbcType="VARCHAR" property="requestId" />
+    <result column="send_user_id" jdbcType="VARCHAR" property="sendUserId" />
+    <result column="accept_user_id" jdbcType="VARCHAR" property="acceptUserId" />
+    <result column="status" jdbcType="INTEGER" property="status" />
+    <result column="is_del" jdbcType="INTEGER" property="isDel" />
+    <result column="request_time" jdbcType="TIMESTAMP" property="requestTime" />
+  </resultMap>
+  <select id="getFriendRequestList" resultType="com.xub.wechat.pojo.vo.FriendRequestVO">
+    select
+      u.userid as sendUserId,
+      u.username as sendUsername,
+      u.avatar_url as sendAvatarUrl,
+      u.nickname as sendNickname
+    from
+      tb_friend_request fr
+        LEFT JOIN
+        tb_user u ON fr.send_user_id=u.userid
+    WHERE fr.accept_user_id=#{userid} and fr.status=1
+  </select>
+</mapper>
