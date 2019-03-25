@@ -1,5 +1,6 @@
 package com.xub.wechat.websocket;
 
+import com.xub.wechat.config.NettyConfig;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.EventLoopGroup;
@@ -7,6 +8,7 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 
@@ -15,33 +17,49 @@ public class WSServer {
 
 	private Logger logger= LoggerFactory.getLogger(this.getClass());
 
-	private static class SingletionWSServer {
-		static final WSServer instance = new WSServer();
-	}
 
-	public static WSServer getInstance() {
-		return SingletionWSServer.instance;
-	}
-
-	private EventLoopGroup mainGroup;
-	private EventLoopGroup subGroup;
+	private EventLoopGroup bossGroup;
+	private EventLoopGroup workerGroup;
 	private ServerBootstrap server;
-	private ChannelFuture future;
 
-	public WSServer() {
-		mainGroup = new NioEventLoopGroup();
-		subGroup = new NioEventLoopGroup();
+
+	private volatile static WSServer uniqueSingleton;
+
+	private WSServer() {
+		bossGroup = new NioEventLoopGroup();
+		workerGroup = new NioEventLoopGroup();
 		server = new ServerBootstrap();
-		server.group(mainGroup, subGroup)
+		server.group(bossGroup, workerGroup)
 				.channel(NioServerSocketChannel.class)
 				.childHandler(new WSServerInitialzer());
 	}
 
-	public void start() {
-		//int port=nettyConfig.getPort();
-		int port=8088;
-		this.future = server.bind(port);
-		logger.error("netty websocket server 启动完毕...,开启端口：{}",port);
+	public static WSServer getInstance() {
+		if (null == uniqueSingleton) {
+			synchronized (WSServer.class) {
+				if (null == uniqueSingleton) {
+					uniqueSingleton = new WSServer();
+				}
+			}
+		}
+		return uniqueSingleton;
+	}
+
+	public void start(int port) {
+		try {
+			ChannelFuture future = server.bind(port).sync();
+			logger.info("netty websocket server 启动完毕...,开启端口：{}",port);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+
+	}
+
+	public void stop(){
+		// 优雅退出，释放线程池资源
+		bossGroup.shutdownGracefully();
+		workerGroup.shutdownGracefully();
+		logger.info("netty websocket server 关闭~~~");
 	}
 	
 }

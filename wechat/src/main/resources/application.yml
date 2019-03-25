@@ -7,6 +7,7 @@ server:
     uri-encoding: UTF-8
   port: 8080
 
+
 # ===================================================================
 # 分布式文件系统FDFS配置
 # ===================================================================
@@ -47,4 +48,15 @@ mapper:
 # netty
 # ===================================================================
 netty:
-  port: 11111
+  config:
+    port: 8088
+# ===================================================================
+# 个推
+# ===================================================================
+getui:
+  config:
+    appId: fllzl2ifoL9EllUSJZWXPA
+    appSecret: r15s4fJjkX9u8BzJPQmw06
+    appKey: VV8l5ujDq9AajddfyqVcuA
+    masterSecret: hljnxsDiVE9IxJOcjimnfA
+    host: http://sdk.open.api.igexin.com/apiex.htm

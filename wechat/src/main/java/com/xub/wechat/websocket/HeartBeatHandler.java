@@ -32,8 +32,8 @@ public class HeartBeatHandler extends ChannelInboundHandlerAdapter {
 					logger.error("进入写空闲...");
 					break;
 				case ALL_IDLE:
-					loss_connect_time++;
-					logger.error("5 秒没有接收到客户端的信息了");
+					//loss_connect_time++;
+					//logger.error("5 秒没有接收到客户端的信息了");
 					if (loss_connect_time > 5) {
 						Channel channel=ctx.channel();
 						logger.error("channel关闭前，users的数量为：{},关闭channel为：{}",ChatHandler.clients.size(),channel.id());

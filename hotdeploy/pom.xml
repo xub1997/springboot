@@ -32,6 +32,7 @@
             <artifactId>spring-boot-devtools</artifactId>
             <!--主要是要设置optional属性为true -->
             <optional>true</optional>
+            <scope>true</scope>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -45,6 +46,9 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <fork>true</fork>
+                </configuration>
             </plugin>
         </plugins>
     </build>

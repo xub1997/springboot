@@ -7,10 +7,14 @@ import java.util.List;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.xub.wechat.SpringUtil;
+import com.xub.wechat.config.PushConfig;
 import com.xub.wechat.enums.MsgActionEnum;
+import com.xub.wechat.pojo.User;
 import com.xub.wechat.pojo.bo.DataContent;
 import com.xub.wechat.pojo.vo.ChatMsgVO;
+import com.xub.wechat.push.AppPush;
 import com.xub.wechat.service.ChatMsgService;
+import com.xub.wechat.service.UserService;
 import com.xub.wechat.utils.StringUtil;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
@@ -67,9 +71,9 @@ public class ChatHandler extends SimpleChannelInboundHandler<TextWebSocketFrame>
 			UserRelationShipMap.add(senderId, currentChannel);
 
 			// 测试
-			for (Channel c : clients) {
+			/*for (Channel c : clients) {
 				System.out.println(c.id().asLongText());
-			}
+			}*/
 			UserRelationShipMap.output();
 		} else if (action == MsgActionEnum.CHAT.type) {
 			//  2.2  聊天类型的消息，把聊天记录保存到数据库，同时标记消息的签收状态[未签收]
@@ -91,6 +95,10 @@ public class ChatHandler extends SimpleChannelInboundHandler<TextWebSocketFrame>
 			Channel receiverChannel = UserRelationShipMap.get(receiverId);
 			if (receiverChannel == null) {
 				// TODO channel为空代表用户离线，推送消息（JPush，个推，小米推送）
+				UserService userService = (UserService) SpringUtil.getBean("userService");
+				User ssearch_result=userService.queryUserById(receiverId);
+				PushConfig pushConfig = (PushConfig) SpringUtil.getBean("pushConfig");
+				AppPush.pushToSingleWithNotificationTemplate(pushConfig,"未读消息",msgText,ssearch_result.getCid());
 			} else {
 				// 当receiverChannel不为空的时候，从ChannelGroup去查找对应的channel是否存在
 				Channel findChannel = clients.find(receiverChannel.id());

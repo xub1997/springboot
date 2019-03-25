@@ -1,11 +1,12 @@
 package com.xub.wechat.controller;
 
+import com.xub.wechat.config.PushConfig;
 import com.xub.wechat.enums.OperatorFriendRequestTypeEnum;
 import com.xub.wechat.enums.RequestStatusEnum;
 import com.xub.wechat.enums.SearchFriendsStatusEnum;
 import com.xub.wechat.pojo.FriendRequest;
-import com.xub.wechat.pojo.MyFriends;
 import com.xub.wechat.pojo.User;
+import com.xub.wechat.push.AppPush;
 import com.xub.wechat.service.FriendRequestService;
 import com.xub.wechat.service.UserService;
 import com.xub.wechat.utils.ResponseData;
@@ -29,6 +30,13 @@ public class FriendRequestController {
 
     @Autowired
     private FriendRequestService friendRequestService;
+
+    @Autowired
+    private AppPush appPush;
+
+
+    @Autowired
+    private PushConfig pushConfig;
 
     /*
      * 搜索好友，根据账号做匹配查询而不是模糊查询,返回账号对应用户信息
@@ -77,6 +85,7 @@ public class FriendRequestController {
             friendRequest.setAcceptUserId(search_result.getUserid());
             friendRequest.setStatus(RequestStatusEnum.Wait_Accept.getCode());//待通过
             friendRequest.setIsDel(0);//未删除
+            AppPush.pushToSingleWithNotificationTemplate(pushConfig,"好友请求",friendUsername+"请求添加你为好友",search_result.getCid());
             return friendRequestService.sendFriendRequest(friendRequest);
         }else{
             String errorMsg=SearchFriendsStatusEnum.getMsgByKey(flag);
