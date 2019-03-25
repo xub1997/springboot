@@ -96,9 +96,9 @@ public class ChatHandler extends SimpleChannelInboundHandler<TextWebSocketFrame>
 			if (receiverChannel == null) {
 				// TODO channel为空代表用户离线，推送消息（JPush，个推，小米推送）
 				UserService userService = (UserService) SpringUtil.getBean("userService");
-				User ssearch_result=userService.queryUserById(receiverId);
-				PushConfig pushConfig = (PushConfig) SpringUtil.getBean("pushConfig");
-				AppPush.pushToSingleWithNotificationTemplate(pushConfig,"未读消息",msgText,ssearch_result.getCid());
+				User search_result=userService.queryUserById(receiverId);
+				PushConfig pushConfig = (PushConfig) SpringUtil.getBean(PushConfig.class);
+				AppPush.pushToSingleWithNotificationTemplate(pushConfig,"未读消息",msgText,search_result.getCid());
 			} else {
 				// 当receiverChannel不为空的时候，从ChannelGroup去查找对应的channel是否存在
 				Channel findChannel = clients.find(receiverChannel.id());
