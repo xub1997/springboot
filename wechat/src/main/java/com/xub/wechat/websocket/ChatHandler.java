@@ -109,6 +109,10 @@ public class ChatHandler extends SimpleChannelInboundHandler<TextWebSocketFrame>
 									JSONObject.toJSONString(dataContentMsg)));
 				} else {
 					// 用户离线 TODO 推送消息
+					UserService userService = (UserService) SpringUtil.getBean("userService");
+					User search_result=userService.queryUserById(receiverId);
+					PushConfig pushConfig = (PushConfig) SpringUtil.getBean(PushConfig.class);
+					AppPush.pushToSingleWithNotificationTemplate(pushConfig,"未读消息",msgText,search_result.getCid());
 				}
 			}
 
