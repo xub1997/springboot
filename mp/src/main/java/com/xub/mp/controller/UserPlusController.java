@@ -32,7 +32,7 @@ public class UserPlusController {
     /**
      * MP扩展演示
      */
-    @RequestMapping("/getInfoListPlus")
+    @GetMapping("/getInfoListPlus")
     public Map<String,Object> getInfoListPage(){
         //初始化返回类
         Map<String,Object> result = new HashMap<>();
