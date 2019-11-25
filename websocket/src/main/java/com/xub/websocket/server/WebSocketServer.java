@@ -1,6 +1,8 @@
 package com.xub.websocket.server;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArraySet;
 
 import javax.websocket.OnClose;
@@ -22,8 +24,8 @@ public class WebSocketServer {
     static Logger log = LoggerFactory.getLogger(WebSocketServer.class);
     //静态变量，用来记录当前在线连接数。应该把它设计成线程安全的。
     private static int onlineCount = 0;
-    //concurrent包的线程安全Set，用来存放每个客户端对应的MyWebSocket对象。
-    private static CopyOnWriteArraySet<WebSocketServer> webSocketSet = new CopyOnWriteArraySet<WebSocketServer>();
+
+    private static ConcurrentHashMap<String, Session> sessionHashMap = new ConcurrentHashMap();
 
     //与某个客户端的连接会话，需要通过它来给客户端发送数据
     private Session session;
@@ -35,11 +37,11 @@ public class WebSocketServer {
     @OnOpen
     public void onOpen(Session session) {
         this.session = session;
-        webSocketSet.add(this);     //加入set中
+        sessionHashMap.put(session.getId(), session);
         addOnlineCount();           //在线数加1
         log.info("有新连接:" + session.getId() + ",当前在线人数为" + getOnlineCount());
         try {
-            sendMessage("连接成功");
+            session.getBasicRemote().sendText("连接成功");
         } catch (IOException e) {
             log.error("websocket IO异常");
         }
@@ -50,7 +52,7 @@ public class WebSocketServer {
      */
     @OnClose
     public void onClose() {
-        webSocketSet.remove(this);  //从set中删除
+        sessionHashMap.remove(this.session.getId());  //从set中删除
         subOnlineCount();           //在线数减1
         log.info("有一连接关闭！当前在线人数为" + getOnlineCount());
     }
@@ -64,9 +66,10 @@ public class WebSocketServer {
     public void onMessage(String message, Session session) {
         log.info("收到来自" + session.getId() + "的信息:" + message);
         //群发消息
-        for (WebSocketServer item : webSocketSet) {
+        for (Session item : sessionHashMap.values()) {
             try {
-                item.sendMessage(message);
+                item.getBasicRemote().sendText(message);
+                ;
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -81,13 +84,16 @@ public class WebSocketServer {
     public void onError(Session session, Throwable error) {
         log.error("发生错误");
         error.printStackTrace();
+        subOnlineCount();           //在线数减1
+        sessionHashMap.remove(session.getId());
     }
 
     /**
      * 实现服务器主动推送
      */
-    public void sendMessage(String message) throws IOException {
-        this.session.getBasicRemote().sendText(message);
+    public void sendMessage(String sessionId, String message) throws IOException {
+        Session thisSession = sessionHashMap.get(sessionId);
+        thisSession.getBasicRemote().sendText(message);
     }
 
 
@@ -96,11 +102,13 @@ public class WebSocketServer {
      */
     public static void sendInfo(String message) throws IOException {
 
-        for (WebSocketServer item : webSocketSet) {
+        //群发消息
+        for (Session item : sessionHashMap.values()) {
             try {
-                item.sendMessage(message);
+                item.getBasicRemote().sendText(message);
+                ;
             } catch (IOException e) {
-                continue;
+                e.printStackTrace();
             }
         }
     }
