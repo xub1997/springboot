@@ -1,11 +1,14 @@
-package com.xub.quartz;
+package com.xub.quartz.task;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
 /**
@@ -15,6 +18,7 @@ import java.util.Date;
  * @date 2019/5/24  9:30
  */
 @Component
+@EnableScheduling
 public class HelloTask {
     private Logger logger= LoggerFactory.getLogger(this.getClass());
 
@@ -120,9 +124,8 @@ public class HelloTask {
      */
     @Scheduled(cron = "0/5 * * * * ? ")
     public void task2(){
-        Date date=new Date();
-        SimpleDateFormat simpleDateFormat=new SimpleDateFormat("YYYY-MM-dd HH:mm:ss");
-        logger.info("任务2：Hello world！执行时间：{}",simpleDateFormat.format(date));
+        LocalDateTime localDateTime = LocalDateTime.now();
+        logger.info("任务2：Hello world！执行时间显示：{}",localDateTime.format(DateTimeFormatter.ofPattern("YYYY-MM-dd HH:mm:ss")));
     }
 
 }
