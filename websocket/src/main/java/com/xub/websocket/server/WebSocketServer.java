@@ -22,6 +22,7 @@ import org.springframework.stereotype.Component;
 public class WebSocketServer {
 
     static Logger log = LoggerFactory.getLogger(WebSocketServer.class);
+
     //静态变量，用来记录当前在线连接数。应该把它设计成线程安全的。
     private static int onlineCount = 0;
 
@@ -39,7 +40,7 @@ public class WebSocketServer {
         this.session = session;
         sessionHashMap.put(session.getId(), session);
         addOnlineCount();           //在线数加1
-        log.info("有新连接:" + session.getId() + ",当前在线人数为" + getOnlineCount());
+        log.info("有新连接,id:{},当前在线人数为{}", session.getId(), getOnlineCount());
         try {
             session.getBasicRemote().sendText("连接成功");
         } catch (IOException e) {
@@ -54,7 +55,7 @@ public class WebSocketServer {
     public void onClose() {
         sessionHashMap.remove(this.session.getId());  //从set中删除
         subOnlineCount();           //在线数减1
-        log.info("有一连接关闭！当前在线人数为" + getOnlineCount());
+        log.info("有一连接关闭！当前在线人数为{}", getOnlineCount());
     }
 
     /**
@@ -64,7 +65,7 @@ public class WebSocketServer {
      */
     @OnMessage
     public void onMessage(String message, Session session) {
-        log.info("收到来自" + session.getId() + "的信息:" + message);
+        log.info("收到来自id:{}的信息:{}",session.getId(), message);
         //群发消息
         for (Session item : sessionHashMap.values()) {
             try {
@@ -82,46 +83,50 @@ public class WebSocketServer {
      */
     @OnError
     public void onError(Session session, Throwable error) {
-        log.error("发生错误");
+        log.error("连接发生错误");
         error.printStackTrace();
         subOnlineCount();           //在线数减1
-        sessionHashMap.remove(session.getId());
     }
 
     /**
      * 实现服务器主动推送
      */
-    public void sendMessage(String sessionId, String message) throws IOException {
-        Session thisSession = sessionHashMap.get(sessionId);
-        thisSession.getBasicRemote().sendText(message);
+    public void sendMessage(String sessionId, String message) {
+        if (sessionHashMap.containsKey(sessionId)) {
+            Session thisSession = sessionHashMap.get(sessionId);
+            try {
+                thisSession.getBasicRemote().sendText(message);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+        }
     }
 
 
     /**
      * 群发自定义消息
      */
-    public static void sendInfo(String message) throws IOException {
-
+    public void sendMessage(String message) {
         //群发消息
         for (Session item : sessionHashMap.values()) {
             try {
                 item.getBasicRemote().sendText(message);
-                ;
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
     }
 
-    public static synchronized int getOnlineCount() {
+    public int getOnlineCount() {
         return onlineCount;
     }
 
-    public static synchronized void addOnlineCount() {
+    public void addOnlineCount() {
         WebSocketServer.onlineCount++;
     }
 
-    public static synchronized void subOnlineCount() {
+    public void subOnlineCount() {
         WebSocketServer.onlineCount--;
     }
 }
