@@ -1,0 +1,20 @@
+package com.xub.shiro.core.controller;
+
+
+import org.springframework.web.bind.annotation.RequestMapping;
+
+import org.springframework.web.bind.annotation.RestController;
+
+/**
+ * <p>
+ * 用户信息表 前端控制器
+ * </p>
+ *
+ * @author xub
+ * @since 2019-12-02
+ */
+@RestController
+@RequestMapping("/core/tb-sys-user")
+public class TbSysUserController {
+
+}

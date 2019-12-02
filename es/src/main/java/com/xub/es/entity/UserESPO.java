@@ -1,5 +1,7 @@
 package com.xub.es.entity;
 
+import org.springframework.data.elasticsearch.annotations.Document;
+
 /**
  * @description:
  * @author: 黎清许
@@ -7,5 +9,6 @@ package com.xub.es.entity;
  * <p>
  * CopyRight &copy; All rights reserved.
  **/
+@Document(indexName = "study",type = "_doc")
 public class UserESPO {
 }
