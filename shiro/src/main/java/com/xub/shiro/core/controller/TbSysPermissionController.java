@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
  * </p>
  *
  * @author xub
- * @since 2019-12-02
+ * @since 2019-12-04
  */
 @RestController
 @RequestMapping("/core/tb-sys-permission")

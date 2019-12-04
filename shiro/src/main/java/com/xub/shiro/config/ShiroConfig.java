@@ -4,13 +4,16 @@ import com.xub.shiro.constant.RedisConstant;
 import com.xub.shiro.shiro.ShiroRealm;
 import com.xub.shiro.shiro.ShiroSessionIdGenerator;
 import com.xub.shiro.shiro.ShiroSessionManager;
-import com.xub.shiro.utils.SHA256Util;
+import com.xub.shiro.utils.EncryptUtil;
 import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
+import org.apache.shiro.codec.Base64;
 import org.apache.shiro.mgt.SecurityManager;
 import org.apache.shiro.session.mgt.SessionManager;
 import org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
+import org.apache.shiro.web.mgt.CookieRememberMeManager;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
+import org.apache.shiro.web.servlet.SimpleCookie;
 import org.crazycake.shiro.RedisCacheManager;
 import org.crazycake.shiro.RedisManager;
 import org.crazycake.shiro.RedisSessionDAO;
@@ -21,7 +24,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Component;
 
 import java.util.LinkedHashMap;
-import java.util.Map;
 
 /**
  * @description:
@@ -36,13 +38,11 @@ import java.util.Map;
 public class ShiroConfig {
 
     @Autowired
-    RedisConfig redisConfig;
+    private RedisConfig redisConfig;
 
     /**
      * 开启Shiro-aop注解支持
      * @Attention 使用代理方式所以需要开启代码支持
-     * @Author Sans
-     * @CreateTime 2019/6/12 8:38
      */
     @Bean
     public AuthorizationAttributeSourceAdvisor authorizationAttributeSourceAdvisor(SecurityManager securityManager) {
@@ -51,24 +51,41 @@ public class ShiroConfig {
         return authorizationAttributeSourceAdvisor;
     }
 
+//    @Bean(name = "lifecycleBeanPostProcessor")
+//    public LifecycleBeanPostProcessor lifecycleBeanPostProcessor() {
+//        return new LifecycleBeanPostProcessor();
+//    }
+//
+//    @Bean
+//    @DependsOn({"lifecycleBeanPostProcessor"})
+//    public DefaultAdvisorAutoProxyCreator advisorAutoProxyCreator() {
+//        DefaultAdvisorAutoProxyCreator advisorAutoProxyCreator = new DefaultAdvisorAutoProxyCreator();
+//        advisorAutoProxyCreator.setProxyTargetClass(true);
+//        return advisorAutoProxyCreator;
+//    }
+
     /**
      * Shiro基础配置
-     * @Author Sans
-     * @CreateTime 2019/6/12 8:42
      */
     @Bean
     public ShiroFilterFactoryBean shiroFilterFactory(SecurityManager securityManager){
         ShiroFilterFactoryBean shiroFilterFactoryBean = new ShiroFilterFactoryBean();
         shiroFilterFactoryBean.setSecurityManager(securityManager);
-        Map<String, String> filterChainDefinitionMap = new LinkedHashMap<>();
-        // 注意过滤器配置顺序不能颠倒
-        // 配置过滤:不会被拦截的链接
-        filterChainDefinitionMap.put("/static/**", "anon");
-        filterChainDefinitionMap.put("/user/login/**", "anon");
+        shiroFilterFactoryBean.setLoginUrl("/login");
+        shiroFilterFactoryBean.setSuccessUrl("/index");
+        shiroFilterFactoryBean.setUnauthorizedUrl("/403");
+        LinkedHashMap<String, String> filterChainDefinitionMap = new LinkedHashMap<>();
+
+        filterChainDefinitionMap.put("/css/**", "anon");
+        filterChainDefinitionMap.put("/js/**", "anon");
+        filterChainDefinitionMap.put("/fonts/**", "anon");
+        filterChainDefinitionMap.put("/img/**", "anon");
+        filterChainDefinitionMap.put("/druid/**", "anon");
+        filterChainDefinitionMap.put("/logout", "logout");
+        filterChainDefinitionMap.put("/", "anon");
         filterChainDefinitionMap.put("/**", "authc");
-        // 配置shiro默认登录界面地址，前后端分离中登录界面跳转应由前端路由控制，后台仅返回json数据
-        shiroFilterFactoryBean.setLoginUrl("/user/login/unauth");
         shiroFilterFactoryBean.setFilterChainDefinitionMap(filterChainDefinitionMap);
+
         return shiroFilterFactoryBean;
     }
 
@@ -78,13 +95,32 @@ public class ShiroConfig {
     @Bean
     public SecurityManager securityManager() {
         DefaultWebSecurityManager securityManager = new DefaultWebSecurityManager();
-        // 自定义Ssession管理
+        // 自定义Session管理
         securityManager.setSessionManager(sessionManager());
         // 自定义Cache实现
         securityManager.setCacheManager(cacheManager());
+        //记住我功能
+        securityManager.setRememberMeManager(rememberMeManager());
         // 自定义Realm验证
-//        securityManager.setRealm(shiroRealm());
+        securityManager.setRealm(shiroRealm());
         return securityManager;
+    }
+
+    public SimpleCookie rememberMeCookie() {
+        SimpleCookie cookie = new SimpleCookie("rememberMe");
+        cookie.setMaxAge(86400);
+        return cookie;
+    }
+
+    /**
+     * 记住我
+     * @return
+     */
+    public CookieRememberMeManager rememberMeManager() {
+        CookieRememberMeManager cookieRememberMeManager = new CookieRememberMeManager();
+        cookieRememberMeManager.setCookie(rememberMeCookie());
+        cookieRememberMeManager.setCipherKey(Base64.decode("4AvVhmFLUs0KTA3Kprsdag=="));
+        return cookieRememberMeManager;
     }
 
     /**
@@ -105,9 +141,9 @@ public class ShiroConfig {
     public HashedCredentialsMatcher hashedCredentialsMatcher() {
         HashedCredentialsMatcher shaCredentialsMatcher = new HashedCredentialsMatcher();
         // 散列算法:这里使用SHA256算法;
-        shaCredentialsMatcher.setHashAlgorithmName(SHA256Util.HASH_ALGORITHM_NAME);
+        shaCredentialsMatcher.setHashAlgorithmName(EncryptUtil.HASH_ALGORITHM_NAME2);
         // 散列的次数，比如散列两次，相当于 md5(md5(""));
-        shaCredentialsMatcher.setHashIterations(SHA256Util.HASH_ITERATIONS);
+        shaCredentialsMatcher.setHashIterations(EncryptUtil.HASH_ITERATIONS);
         return shaCredentialsMatcher;
     }
 

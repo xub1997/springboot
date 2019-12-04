@@ -11,7 +11,7 @@ import java.util.List;
  * </p>
  *
  * @author xub
- * @since 2019-12-02
+ * @since 2019-12-04
  */
 public interface ITbSysRoleService extends IService<TbSysRole> {
 

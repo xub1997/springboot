@@ -9,9 +9,9 @@ import com.baomidou.mybatisplus.extension.service.IService;
  * </p>
  *
  * @author xub
- * @since 2019-12-02
+ * @since 2019-12-04
  */
 public interface ITbSysUserService extends IService<TbSysUser> {
 
-    TbSysUser selectUserByName(String username);
+    TbSysUser selectUserByName(String userName);
 }

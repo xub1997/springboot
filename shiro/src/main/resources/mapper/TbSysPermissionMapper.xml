@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.xub.shiro.core.mapper.TbSysPermissionMapper">
-
+    <select id="selectSysPermissionByUserId" resultType="com.xub.shiro.core.entity.TbSysPermission">
+        SELECT p.* from tb_sys_permission p LEFT JOIN tb_sys_permission_role pr ON p.id=pr.permission_id
+        LEFT JOIN tb_sys_role r ON r.id=pr.role_id
+        LEFT JOIN tb_sys_user_role ur ON ur.role_id=r.id
+        WHERE ur.user_id=#{userId} AND p.is_deleted=0 AND p.is_used=1 GROUP BY p.id;
+    </select>
 </mapper>

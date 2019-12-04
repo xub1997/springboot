@@ -4,6 +4,7 @@ import com.xub.shiro.core.entity.TbSysRole;
 import com.xub.shiro.core.mapper.TbSysRoleMapper;
 import com.xub.shiro.core.service.ITbSysRoleService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -14,13 +15,17 @@ import java.util.List;
  * </p>
  *
  * @author xub
- * @since 2019-12-02
+ * @since 2019-12-04
  */
 @Service
 public class TbSysRoleServiceImpl extends ServiceImpl<TbSysRoleMapper, TbSysRole> implements ITbSysRoleService {
 
+    @Autowired
+    private TbSysRoleMapper roleMapper;
+
     @Override
     public List<TbSysRole> selectSysRoleByUserId(String userId) {
-        return null;
+        List<TbSysRole> sysRoleList = roleMapper.selectSysRoleByUserId(userId);
+        return sysRoleList;
     }
 }

@@ -6,16 +6,14 @@ import org.springframework.core.io.FileSystemResource;
 import org.springframework.mail.MailException;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
-
-import org.springframework.mail.javamail.MimeMailMessage;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
-
+import org.thymeleaf.TemplateEngine;
+import org.thymeleaf.context.Context;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import java.io.File;
-import java.util.Date;
 
 
 /*
@@ -36,6 +34,9 @@ public class MailService {
     * */
     @Autowired
     private JavaMailSender mailSender;
+
+    @Autowired
+    private TemplateEngine templateEngine;
 
 
     /*
@@ -118,6 +119,24 @@ public class MailService {
     /*
     * 发送模板邮件
     * */
-
+    public void sendTemplateEmail(String toPerson,String subject,String content) {
+        MimeMessage message=mailSender.createMimeMessage();
+        try {
+            MimeMessageHelper helper=new MimeMessageHelper(message,true);
+            helper.setTo(toPerson);//收件人
+            helper.setSubject(subject);//主题
+            // 处理邮件模板
+            Context context = new Context();
+            context.setVariable("id", content);
+            String template = templateEngine.process("emailTemplate", context);
+            helper.setText(template, true);
+            helper.setFrom(from);//发件人
+            mailSender.send(message);
+        }catch (MessagingException e) {
+            e.printStackTrace();
+        }catch (MailException e){
+            e.printStackTrace();
+        }
+    }
 
 }

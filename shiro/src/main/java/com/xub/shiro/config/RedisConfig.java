@@ -1,5 +1,6 @@
 package com.xub.shiro.config;
 
+import lombok.Data;
 import lombok.Getter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
@@ -11,7 +12,7 @@ import org.springframework.stereotype.Component;
  * <p>
  * CopyRight &copy; All rights reserved.
  **/
-@Getter
+@Data
 @Component
 @ConfigurationProperties(prefix = "spring.redis")
 public class RedisConfig {

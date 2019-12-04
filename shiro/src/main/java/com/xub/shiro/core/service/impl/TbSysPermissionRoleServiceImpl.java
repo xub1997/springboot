@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
  * </p>
  *
  * @author xub
- * @since 2019-12-02
+ * @since 2019-12-04
  */
 @Service
 public class TbSysPermissionRoleServiceImpl extends ServiceImpl<TbSysPermissionRoleMapper, TbSysPermissionRole> implements ITbSysPermissionRoleService {

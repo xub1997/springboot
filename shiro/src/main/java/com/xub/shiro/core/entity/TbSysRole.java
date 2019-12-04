@@ -1,10 +1,11 @@
 package com.xub.shiro.core.entity;
 
-import java.time.LocalDateTime;
-import java.io.Serializable;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
+
+import java.io.Serializable;
+import java.util.Date;
 
 /**
  * <p>
@@ -12,7 +13,7 @@ import lombok.experimental.Accessors;
  * </p>
  *
  * @author xub
- * @since 2019-12-02
+ * @since 2019-12-04
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
@@ -59,7 +60,7 @@ public class TbSysRole implements Serializable {
     /**
      * 创建时间
      */
-    private LocalDateTime createTime;
+    private Date createTime;
 
     /**
      * 创建程序
@@ -79,7 +80,7 @@ public class TbSysRole implements Serializable {
     /**
      * 更新时间
      */
-    private LocalDateTime updateTime;
+    private Date updateTime;
 
     /**
      * 更新程序
