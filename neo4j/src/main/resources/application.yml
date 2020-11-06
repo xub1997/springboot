@@ -1,0 +1,7 @@
+
+spring:
+  data:
+    neo4j:
+      uri: bolt://10.195.245.200:7687
+      username: neo4j
+      password: xxx
