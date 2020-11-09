@@ -10,6 +10,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.util.Optional;
+
 @SpringBootTest
 class Neo4jApplicationTests {
 
@@ -69,5 +71,25 @@ class Neo4jApplicationTests {
         workRelationShip4.setCompany(company2);
         workRelationShipRepository.save(workRelationShip4);
     }
+
+    @Test
+    void testUpdate() {
+        Optional<Employee> byId = employeeRepository.findById(14L);
+        if(byId.isPresent()){
+            Employee employee = byId.get();
+            employee.setName("11111");
+            employeeRepository.save(employee);
+        }
+    }
+
+    @Test
+    void multiLabels() {
+        Company company1 = new Company();
+        company1.setName("腾讯");
+        company1.addLabel("1111");
+        company1.addLabel("2222");
+        companyRepository.save(company1);
+    }
+
 
 }
