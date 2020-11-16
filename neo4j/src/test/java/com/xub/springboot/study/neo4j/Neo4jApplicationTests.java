@@ -6,7 +6,8 @@ import com.xub.springboot.study.neo4j.entity.WorkRelationShip;
 import com.xub.springboot.study.neo4j.repo.CompanyRepository;
 import com.xub.springboot.study.neo4j.repo.EmployeeRepository;
 import com.xub.springboot.study.neo4j.repo.WorkRelationShipRepository;
-import org.junit.jupiter.api.Test;
+
+import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
