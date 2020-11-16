@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,11 +18,20 @@ public class UserController {
     @Autowired
     private UserRepository userRepository;
 
+    /**
+     * 新增
+     * @param user
+     */
     @PostMapping("/user")
     public void saveUser(@RequestBody User user) {
         userRepository.save(user);
     }
 
+    /**
+     * 根据id获取
+     * @param id
+     * @return
+     */
     @GetMapping("/user/{id}")
     public User getById(@PathVariable("id") Integer id) {
         Optional<User> optionalUser = userRepository.findById(id);
@@ -33,6 +41,11 @@ public class UserController {
         return new User();
     }
 
+    /**
+     * 根据id更新
+     * @param id
+     * @param user
+     */
     @PutMapping("/user/{id}")
     public void updateById(@PathVariable("id") Integer id, @RequestBody User user) {
         Optional<User> optionalUser = userRepository.findById(id);
@@ -43,13 +56,26 @@ public class UserController {
         }
     }
 
+    /**
+     * 根据id删除
+     * @param id
+     */
     @DeleteMapping("/user/{id}")
     public void deleteById(@PathVariable("id") Integer id) {
         userRepository.deleteById(id);
     }
 
     /**
-     *
+     * 全部用户
+     * @return
+     */
+    @GetMapping("/users")
+    public List<User> users() {
+        return userRepository.findAll();
+    }
+
+    /**
+     * 分页列表
      * @param pageNum pageNum从0开始
      * @param pageSize
      * @return
@@ -62,9 +88,5 @@ public class UserController {
         return all;
     }
 
-    @GetMapping("/users")
-    public List<User> users() {
-        return userRepository.findAll();
-    }
 
 }
