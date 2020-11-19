@@ -1,7 +1,8 @@
 package com.xub.es.dao;
 
-import com.xub.es.entity.UserESPO;
+import com.xub.es.entity.ArticlePO;
 import org.springframework.data.elasticsearch.repository.ElasticsearchRepository;
+import org.springframework.stereotype.Repository;
 
 /**
  * @description:
@@ -10,5 +11,6 @@ import org.springframework.data.elasticsearch.repository.ElasticsearchRepository
  * <p>
  * CopyRight &copy; All rights reserved.
  **/
-public interface UserESRepository extends ElasticsearchRepository<UserESPO,String> {
+@Repository
+public interface ArticleRepository extends ElasticsearchRepository<ArticlePO,Integer> {
 }
