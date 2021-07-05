@@ -29,6 +29,8 @@
     <modules>
         <module>h2</module>
         <module>neo4j</module>
+        <module>docker</module>
+        <module>mp</module>
     </modules>
 
     <repositories>

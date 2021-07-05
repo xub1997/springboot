@@ -2,6 +2,6 @@
 spring:
   data:
     neo4j:
-      uri: bolt://10.195.245.200:7687
+      uri: bolt://10.195.245.200:8000
       username: neo4j
-      password: xxx
+      password: bmsoft
