@@ -1,6 +1,0 @@
-spring:
-  thymeleaf:
-    enabled: false
-  devtools:
-    restart:
-      enabled: true

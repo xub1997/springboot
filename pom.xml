@@ -27,10 +27,18 @@
     </properties>
 
     <modules>
-        <module>h2</module>
-        <module>neo4j</module>
+        <module>common_mapper</module>
         <module>docker</module>
+        <module>freemarker</module>
+        <module>h2</module>
+        <module>jpa</module>
+        <module>mail</module>
         <module>mp</module>
+        <module>mybatis</module>
+        <module>neo4j</module>
+        <module>shiro</module>
+        <module>websocket</module>
+        <module>wechat</module>
     </modules>
 
     <repositories>
