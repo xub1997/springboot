@@ -27,6 +27,7 @@
     </properties>
 
     <modules>
+        <module>autowired</module>
         <module>common_mapper</module>
         <module>docker</module>
         <module>freemarker</module>

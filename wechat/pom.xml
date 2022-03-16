@@ -163,7 +163,7 @@
         <dependency>
             <groupId>com.gexin.platform</groupId>
             <artifactId>gexin-rp-sdk-http</artifactId>
-            <version>4.1.0.1</version>
+            <version>4.1.2.1</version>
         </dependency>
 
         <!--junit-->

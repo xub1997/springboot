@@ -13,7 +13,7 @@ mybatis:
   #实体类包位置
   type-aliases-package: com.xub.common_mapper.entity
 mapper:
-  mappers: com.xub.common_mapper.common.IBaseMapper
+  mappers: com.xub.springboot.study.customized_starter_demo.common.IBaseMapper
   not-empty: false
   identity: MYSQL
 

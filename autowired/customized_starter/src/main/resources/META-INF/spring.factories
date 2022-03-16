@@ -1,0 +1,2 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+com.xub.springboot.study.customized_stater.config.CustomizedAutoConfig
