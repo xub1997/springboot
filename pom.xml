@@ -21,18 +21,22 @@
 
     <properties>
         <java.version>1.8</java.version>
+        <maven.version>3.8.1</maven.version>
+        <encode>UTF-8</encode>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <spring-boot.version>2.1.6.RELEASE</spring-boot.version>
     </properties>
 
     <modules>
+        <module>application_context_initializer</module>
         <module>autowired</module>
         <module>common_mapper</module>
         <module>docker</module>
         <module>freemarker</module>
         <module>h2</module>
         <module>jpa</module>
+        <module>liquibase</module>
         <module>mail</module>
         <module>mp</module>
         <module>mybatis</module>
