@@ -40,6 +40,7 @@
         <module>mail</module>
         <module>mp</module>
         <module>mybatis</module>
+        <module>mybatis_interceptor</module>
         <module>nacos_config</module>
         <module>neo4j</module>
         <module>shiro</module>

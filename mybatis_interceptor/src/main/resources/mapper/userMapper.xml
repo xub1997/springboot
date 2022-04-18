@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xub.springboot.study.mybatis_interceptor.mapper.UserMapper">
+
+    <select id="test" resultType="com.xub.springboot.study.mybatis_interceptor.entity.User">
+        select * from
+        user where id =1 order by id desc
+    </select>
+</mapper>
