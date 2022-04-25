@@ -43,6 +43,8 @@
         <module>mybatis_interceptor</module>
         <module>nacos_config</module>
         <module>neo4j</module>
+        <module>redis</module>
+        <module>sba</module>
         <module>shiro</module>
         <module>websocket</module>
         <module>wechat</module>
