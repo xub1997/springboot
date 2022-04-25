@@ -1,0 +1,21 @@
+# 应用名称
+spring:
+  application:
+    name: redis
+  redis:
+    host: 192.168.138.8
+    port: 6379
+    password:
+    database: 0
+    jedis:
+      pool:
+        max-idle: 6
+        max-active: 32
+        max-wait: 100
+        min-idle: 4
+
+# 应用服务 WEB 访问端口
+server:
+  port: 8080
+
+
