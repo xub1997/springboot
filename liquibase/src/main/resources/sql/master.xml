@@ -5,4 +5,10 @@
     <changeSet id="v4.2.0-1" author="liqingxu" context="main">
         <sqlFile path="classpath:/sql/v1.0/1.init.sql"/>
     </changeSet>
+    <changeSet id="v4.2.0-2" author="liqingxu" context="main">
+        <preConditions onFail="CONTINUE">
+            <sqlCheck expectedResult="0">SELECT COUNT(*) FROM information_schema.columns WHERE table_schema='data_center' AND table_name = 'tb_user' AND column_name = 'is_deleted';</sqlCheck>
+        </preConditions>
+        <sqlFile path="classpath:/sql/v1.0/2.test_preCondition.sql"/>
+    </changeSet>
 </databaseChangeLog>
