@@ -14,7 +14,7 @@
     <artifactId>parent</artifactId>
     <version>0.0.1-SNAPSHOT</version>
 
-    <name>parent</name>
+    <name>springboot_study</name>
     <description>父级依赖</description>
 
     <packaging>pom</packaging>
@@ -38,6 +38,7 @@
         <module>jpa</module>
         <module>liquibase</module>
         <module>mail</module>
+        <module>mapstruct</module>
         <module>mp</module>
         <module>mybatis</module>
         <module>mybatis_interceptor</module>
