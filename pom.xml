@@ -47,6 +47,7 @@
         <module>redis</module>
         <module>sba</module>
         <module>shiro</module>
+        <module>type_inference</module>
         <module>websocket</module>
         <module>wechat</module>
     </modules>
