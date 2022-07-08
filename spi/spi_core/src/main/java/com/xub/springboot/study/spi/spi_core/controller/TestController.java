@@ -1,23 +1,19 @@
 package com.xub.springboot.study.spi.spi_core.controller;
 
 import com.xub.springboot.study.spi.spi_core.util.CustomerExtensionLoader;
-import com.xub.springboot.study.spi.spi_data.service.CustomerDubboService;
-import com.xub.springboot.study.spi.spi_data.service.SpiService;
 import com.xub.springboot.study.spi.spi_core.util.JarLoader;
 import com.xub.springboot.study.spi.spi_core.util.SpringUtil;
+import com.xub.springboot.study.spi.spi_data.service.CustomerDubboService;
+import com.xub.springboot.study.spi.spi_data.service.SpiService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 import java.util.ServiceLoader;
 import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
-import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * @author liqingxu
@@ -32,10 +28,6 @@ public class TestController {
 
     @Autowired
     private CustomerExtensionLoader customerExtensionLoader;
-
-    private static final ConcurrentMap<String, SpiService> loadServices = new ConcurrentHashMap<>();
-
-    private static final List<String> loadPaths = new CopyOnWriteArrayList<>();
 
     /**
      * 运行时注册bean
