@@ -3,7 +3,6 @@ package com.xub.springboot.study.spi.spi_core.controller;
 import com.xub.springboot.study.spi.spi_core.util.CustomerExtensionLoader;
 import com.xub.springboot.study.spi.spi_data.service.CustomerDubboService;
 import com.xub.springboot.study.spi.spi_data.service.SpiService;
-import com.xub.springboot.study.spi.spi_core.util.ClassLoaderUtil;
 import com.xub.springboot.study.spi.spi_core.util.JarLoader;
 import com.xub.springboot.study.spi.spi_core.util.SpringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,10 +43,14 @@ public class TestController {
     @GetMapping("/load")
     public void reload(@RequestParam("url") String url,
                        @RequestParam("clazzName") String clazzName) throws ClassNotFoundException {
-        ClassLoader classLoader = ClassLoaderUtil.getClassLoader(url);
-        Class<?> clazz = classLoader.loadClass(clazzName);
+        ClassLoader oldClassLoader = Thread.currentThread().getContextClassLoader();
+        JarLoader jarLoader = new JarLoader(new String[]{url});
+        Thread.currentThread().setContextClassLoader(jarLoader);
+        Class<?> clazz = jarLoader.loadClass(clazzName);
         springUtil.registerBean(clazz.getName(), clazz);
         System.out.println(springUtil.getBean(clazz.getName()));
+        jarLoader = null;
+        Thread.currentThread().setContextClassLoader(oldClassLoader);
     }
 
     /**
