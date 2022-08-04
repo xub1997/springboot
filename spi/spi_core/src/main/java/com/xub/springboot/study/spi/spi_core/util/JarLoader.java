@@ -4,7 +4,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.Assert;
 
 import java.io.File;
-import java.io.FileFilter;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
@@ -69,16 +68,9 @@ public class JarLoader extends URLClassLoader {
         Assert.isTrue(jarPath.exists() && jarPath.isDirectory(),
                 "jar包路径必须存在且为目录.");
 
-        /* set filter */
-        FileFilter jarFilter = new FileFilter() {
-            @Override
-            public boolean accept(File pathname) {
-                return pathname.getName().endsWith(".jar");
-            }
-        };
 
         /* iterate all jar */
-        File[] allJars = new File(path).listFiles(jarFilter);
+        File[] allJars = new File(path).listFiles(pathname -> pathname.getName().endsWith(".jar"));
         List<URL> jarURLs = new ArrayList<>(allJars.length);
 
         for (int i = 0; i < allJars.length; i++) {
