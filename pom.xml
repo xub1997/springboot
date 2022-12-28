@@ -33,6 +33,7 @@
         <module>autowired</module>
         <module>common_mapper</module>
         <module>docker</module>
+        <module>elk</module>
         <module>freemarker</module>
         <module>h2</module>
         <module>jpa</module>
