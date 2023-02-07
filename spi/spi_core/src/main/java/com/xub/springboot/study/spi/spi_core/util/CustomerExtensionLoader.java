@@ -1,5 +1,6 @@
 package com.xub.springboot.study.spi.spi_core.util;
 
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,12 +9,17 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
+import java.net.URLConnection;
 import java.nio.charset.StandardCharsets;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
@@ -22,15 +28,15 @@ import java.util.concurrent.ConcurrentMap;
  * @Description
  * @create 2022-07-08
  */
+@Slf4j
 @Component
 public class CustomerExtensionLoader {
 
-    private static final Logger logger = LoggerFactory.getLogger(CustomerExtensionLoader.class);
 
     @Autowired
     private SpringUtil springUtil;
 
-    private static final ConcurrentMap<Class<?>, Map<String, Object>> EXTENSION_LOADERS = new ConcurrentHashMap<>();
+    private static ConcurrentMap<Class<?>, Map<String, Object>> EXTENSION_LOADERS = new ConcurrentHashMap<>();
     private static final String SERVICES_DIRECTORY = "META-INF/spi/";
 
     public Map<String, Object> getExtensionLoader(Class<?> type, ClassLoader classLoader) {
@@ -52,6 +58,22 @@ public class CustomerExtensionLoader {
         }
         return loader;
     }
+
+    public Map<String, Object> refresh(Class<?> type, ClassLoader classLoader) {
+        Set<Class<?>> classes = EXTENSION_LOADERS.keySet();
+        for (Class<?> aClass : classes) {
+            Map<String, Object> loader = EXTENSION_LOADERS.get(aClass);
+            Set<String> beanNames = loader.keySet();
+            for (String beanName : beanNames) {
+                Object object = loader.get(beanName);
+                springUtil.removeBean(object.getClass().getSimpleName() + beanName, object.getClass());
+            }
+
+        }
+        EXTENSION_LOADERS.clear();
+        return getExtensionLoader(type, classLoader);
+    }
+
 
     private Map<String, Object> loadExtensionClass(String type, ClassLoader classLoader) {
         Map<String, Object> extensionClasses = new HashMap<>();
@@ -78,8 +100,7 @@ public class CustomerExtensionLoader {
                 }
             }
         } catch (Throwable t) {
-            logger.error("Exception occurred when loading extension class (interface: " +
-                    type + ", description file: " + fileName + ").", t);
+            log.error("Exception occurred when loading extension class (interface: {}, description file: {}).", type, fileName, t);
         }
     }
 
@@ -105,13 +126,13 @@ public class CustomerExtensionLoader {
                                 loadClass(extensionClasses, resourceURL, Class.forName(line, true, classLoader), name);
                             }
                         } catch (Throwable t) {
-                            IllegalStateException e = new IllegalStateException("Failed to load extension class (class line: " + line + ") in " + resourceURL + ", cause: " + t.getMessage(), t);
+                            throw new IllegalStateException("Failed to load extension class (class line: " + line + ") in " + resourceURL + ", cause: " + t.getMessage(), t);
                         }
                     }
                 }
             }
         } catch (Throwable t) {
-            logger.error("Exception occurred when loading extension class (class file: " + resourceURL + ") in " + resourceURL, t);
+            log.error("Exception occurred when loading extension class (class file: {}) in {}", resourceURL, resourceURL, t);
         }
     }
 
@@ -131,8 +152,6 @@ public class CustomerExtensionLoader {
         if (o == null) {
             Object bean = parseClassToSpringBean(name, clazz);
             extensionClasses.put(name, bean);
-        } else {
-            throw new IllegalStateException("Duplicate extension name " + name + " on " + clazz.getName() + " and " + clazz.getName());
         }
     }
 

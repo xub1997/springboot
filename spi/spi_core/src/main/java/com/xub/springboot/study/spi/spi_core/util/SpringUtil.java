@@ -43,7 +43,26 @@ public class SpringUtil implements ApplicationContextAware {
         // 注册bean
         defaultListableBeanFactory.registerBeanDefinition(beanName, beanDefinitionBuilder.getRawBeanDefinition());
         log.info("register bean [{}],Class [{}] success.", beanName, clazz);
+
     }
+
+    /**
+     * 删除spring容器中的bean
+     *
+     * @param beanName 名称
+     */
+    public void removeBean(String beanName, Class<?> clazz) {
+        // 通过BeanDefinitionBuilder创建bean定义
+        BeanDefinitionBuilder beanDefinitionBuilder = BeanDefinitionBuilder.genericBeanDefinition(clazz);
+        //将applicationContext转换为ConfigurableApplicationContext
+        ConfigurableApplicationContext configurableApplicationContext = (ConfigurableApplicationContext) applicationContext;
+        DefaultListableBeanFactory defaultListableBeanFactory = (DefaultListableBeanFactory) configurableApplicationContext.getBeanFactory();
+        // 注册bean
+        defaultListableBeanFactory.removeBeanDefinition(beanName);
+        log.info("remove bean [{}] success.", beanName);
+
+    }
+
 
     public Object getBean(String name) {
         return applicationContext.getBean(name);

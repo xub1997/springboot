@@ -94,5 +94,23 @@ public class TestController {
         Thread.currentThread().setContextClassLoader(oldClassLoader);
     }
 
+    /**
+     * 参考dubbo 实现spi
+     */
+    @GetMapping("/spiLoad/dubbo/refresh")
+    public void refresh(@RequestParam("path") String path) {
+        ClassLoader oldClassLoader = Thread.currentThread().getContextClassLoader();
+        JarLoader jarLoader = new JarLoader(new String[]{path});
+        Thread.currentThread().setContextClassLoader(jarLoader);
+        Map<String, Object> objectMap = customerExtensionLoader.refresh(CustomerDubboService.class, jarLoader);
+        final Set<String> beanNames = objectMap.keySet();
+        for (String beanName : beanNames) {
+            CustomerDubboService customerDubboService = (CustomerDubboService) objectMap.get(beanName);
+            customerDubboService.hello(customerDubboService.getClass().getSimpleName());
+        }
+        jarLoader = null;
+        Thread.currentThread().setContextClassLoader(oldClassLoader);
+    }
+
 
 }
